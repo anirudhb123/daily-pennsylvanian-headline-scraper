@@ -27,9 +27,21 @@ def scrape_data_point():
     if req.ok:
         soup = bs4.BeautifulSoup(req.text, "html.parser")
         target_chunk = soup.find("h2")
-        data_point = "" if target_chunk is None else target_chunk.a.href
-        loguru.logger.info(f"Data point: {data_point}")
-        return data_point
+        data_point = "" if target_chunk is None else target_chunk
+
+        stage1 = data_point.find("a")['href']
+        
+        req2 = requests.get(stage1)
+
+        if req2.ok: 
+            soup = bs4.BeautifulSoup(req2.text, "html.parser")
+            target_chunk = soup.find("article").find("h1")
+            data_point = "" if target_chunk is None else target_chunk
+
+            stage2 = data_point.find("a").text
+            loguru.logger.info(f"Data point: {stage2}")
+
+            return stage2
 
 if __name__ == "__main__":
 
