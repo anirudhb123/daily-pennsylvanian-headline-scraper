@@ -1,5 +1,5 @@
 """
-Scrapes a headline from The Daily Pennsylvanian website and saves it to a 
+Scrapes the top headline from the latest guide on the Daily Pennsylvanian website and saves it to a 
 JSON file that tracks headlines over time.
 """
 
@@ -15,7 +15,7 @@ import loguru
 
 def scrape_data_point():
     """
-    Scrapes the main headline from the latest guide published by The Daily Pennsylvanian. 
+    Scrapes the top headline from the latest guide published by The Daily Pennsylvanian. 
 
     Returns:
         str: The headline text if found, otherwise an empty string.
