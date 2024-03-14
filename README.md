@@ -141,6 +141,62 @@ But it is important to use it responsibly and ethically. Here are some guideline
 
 ## Changes Made to Scraper
 
+Original ```scrape_data_point()``` code
+
+```python
+def scrape_data_point():
+    """
+    Scrapes the main headline from The Daily Pennsylvanian home page.
+
+    Returns:
+        str: The headline text if found, otherwise an empty string.
+    """
+    req = requests.get("https://www.thedp.com")
+    loguru.logger.info(f"Request URL: {req.url}")
+    loguru.logger.info(f"Request status code: {req.status_code}")
+
+    if req.ok:
+        soup = bs4.BeautifulSoup(req.text, "html.parser")
+        target_element = soup.find("a", class_="frontpage-link")
+        data_point = "" if target_element is None else target_element.text
+        loguru.logger.info(f"Data point: {data_point}")
+        return data_point
+```
+
+Modified ```scrape_data_point()``` code
+
+```python
+def scrape_data_point():
+    """
+    Scrapes the top headline from the latest guide published by The Daily Pennsylvanian. 
+
+    Returns:
+        str: The headline text if found, otherwise an empty string.
+    """
+    req = requests.get("https://www.thedp.com/page/guides")
+    loguru.logger.info(f"Request URL: {req.url}")
+    loguru.logger.info(f"Request status code: {req.status_code}")
+
+    if req.ok:
+        soup = bs4.BeautifulSoup(req.text, "html.parser")
+        target_chunk = soup.find("h2")
+        data_point = "" if target_chunk is None else target_chunk
+
+        stage1 = data_point.find("a")['href']
+        
+        req2 = requests.get(stage1)
+
+        if req2.ok: 
+            soup = bs4.BeautifulSoup(req2.text, "html.parser")
+            target_chunk = soup.find("article").find("h1")
+            data_point = "" if target_chunk is None else target_chunk
+
+            stage2 = data_point.find("a").text
+            loguru.logger.info(f"Data point: {stage2}")
+
+            return stage2
+```
+
 
 ## Reasoning behind my Approach
-In order to obtain the top headline from the most recent guide published by the DP, I needed to make two requests, one to
+In order to obtain the top headline from the most recent guide published by the DP, I needed to make two requests, one to the page containing the DP's guides, and one to the page that the most recent guide on this page with all of the guides led to.  
