@@ -1,3 +1,7 @@
+## CIS 3500 HW2 Part IV
+
+This site uses GitHub Actions to create a web scraper to keep track of the top headline from the most recent guide published by the Daily Pennsylvanian each day. 
+
 ## Changes Made to Scraper
 
 Original ```scrape_data_point()``` code
